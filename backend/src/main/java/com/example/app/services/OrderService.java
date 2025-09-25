@@ -3,6 +3,8 @@ package com.example.app.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.example.app.models.OrderModel;
 import com.example.app.repositories.OrderRepository;
@@ -18,6 +20,13 @@ public class OrderService {
 
     public List<OrderModel> getAllOrders() {
         return orderRepository.findAll();
+    }
+
+    public Page<OrderModel> getAllOrders(Pageable pageable, String status) {
+        if (status != null && !status.isEmpty()) {
+            return orderRepository.findByOrderStatusNameContainingIgnoreCase(status, pageable);
+        }
+        return orderRepository.findAll(pageable);
     }
 
     public Optional<OrderModel> getOrderById(String id) {
@@ -50,5 +59,13 @@ public class OrderService {
             }
         }
         return Optional.empty();
+    }
+
+    public boolean deleteOrder(String id) {
+        if (orderRepository.existsById(id)) {
+            orderRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 }

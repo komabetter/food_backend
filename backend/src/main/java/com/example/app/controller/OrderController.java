@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.app.dtos.CreateOrderRequest;
 import com.example.app.dtos.ErrorResponse;
 import com.example.app.dtos.OrderDto;
+import com.example.app.dtos.PagedOrderResponse;
 import com.example.app.dtos.SuccessResponse;
 import com.example.app.dtos.UpdateOrderStatusRequest;
 import com.example.app.models.OrderModel;
@@ -21,6 +22,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api")
@@ -102,12 +108,15 @@ public class OrderController {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    // 4. Get Orders (List)
+    // 4. Get Orders (List with Pagination)
     @GetMapping("/orders")
-    public ResponseEntity<SuccessResponse<List<OrderDto>>> getAllOrders() {
-        List<OrderModel> orders = orderService.getAllOrders();
+    public ResponseEntity<SuccessResponse<PagedOrderResponse>> getAllOrdersPaginated(
+            @PageableDefault(size = 10, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
+            @RequestParam(required = false) String status) {
+        
+        Page<OrderModel> ordersPage = orderService.getAllOrders(pageable, status);
 
-        List<OrderDto> orderDtos = orders.stream()
+        List<OrderDto> orderDtos = ordersPage.getContent().stream()
                 .map(order -> new OrderDto(
                         order.getId(),
                         order.getOrderStatusId(),
@@ -117,7 +126,19 @@ public class OrderController {
                         order.getCustomerName()))
                 .toList();
 
-        SuccessResponse<List<OrderDto>> response = new SuccessResponse<>("200", orderDtos, "SUCCESS");
+        PagedOrderResponse pagedResponse = new PagedOrderResponse(
+                orderDtos,
+                ordersPage.getNumber(),
+                ordersPage.getSize(),
+                ordersPage.getTotalElements(),
+                ordersPage.getTotalPages(),
+                ordersPage.isFirst(),
+                ordersPage.isLast(),
+                ordersPage.hasNext(),
+                ordersPage.hasPrevious()
+        );
+
+        SuccessResponse<PagedOrderResponse> response = new SuccessResponse<>("200", pagedResponse, "SUCCESS");
         return ResponseEntity.ok(response);
     }
 

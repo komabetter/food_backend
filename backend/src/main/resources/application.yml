@@ -11,12 +11,12 @@ spring:
   application:
     name: mindbase
   config:
-    # import: optional:file:../.env[.properties]
+    import: optional:file:../.env[.properties]
   
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:mysql://${DATASOURCE_URL:localhost}:${DATABASE_PORT:3306}/${DATABASE_NAME:food}
+    username: ${DATABASE_USERNAME:admin}
+    password: ${DATABASE_PASSWORD:123456789}
     driver-class-name: com.mysql.cj.jdbc.Driver
   
   jpa:
@@ -34,8 +34,8 @@ spring:
     
   data:
     redis:
-      host: ${SPRING_REDIS_HOST}
-      port: ${SPRING_REDIS_PORT}
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
 management:
   endpoints:
