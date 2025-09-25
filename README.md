@@ -31,6 +31,24 @@ Visit: http://localhost:4200
 docker-compose up --build
 ```
 
+### Env
+
+```
+# App Config
+APP_PORT=8080
+
+# Database Config
+DATASOURCE_URLmysql
+DATABASE_NAME=food
+DATABASE_PORT=3306
+DATABASE_USERNAME=admin
+DATABASE_PASSWORD=123456789
+
+# Redis Config
+REDIS_HOSTredis
+REDIS_PORT=6379
+```
+
 ## API Endpoints
 
 - `GET /api/orders` - Get all orders
