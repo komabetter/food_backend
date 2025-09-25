@@ -23,13 +23,6 @@ cd backend
 mvn spring-boot:run
 ```
 
-2. **Start Frontend** (requires Node.js):
-```bash
-cd frontend
-npm install
-ng serve
-```
-
 Visit: http://localhost:4200
 
 ### Docker Mode
@@ -47,8 +40,8 @@ docker-compose up --build
 
 ## Features
 
-- Order listing with real-time status updates
+- Create order
+- Order status updates
 - Redis caching for improved performance
-- Responsive Angular UI
-- Docker containerization
+- Docker container
 - MySQL database with Flyway migrations
