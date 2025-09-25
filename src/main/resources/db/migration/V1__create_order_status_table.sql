@@ -12,3 +12,14 @@ INSERT INTO ms_order_status (id, status_name) VALUES
 (4, 'DELIVERING'),
 (5, 'COMPLETED'),
 (6, 'CANCELLED');
+
+CREATE TABLE food_orders (
+    id VARCHAR(50) PRIMARY KEY,
+    order_status_id VARCHAR(100) NOT NULL,
+    order_status_name NVARCHAR(50),
+    order_detail NVARCHAR(250),
+    price FLOAT,
+    customer_name NVARCHAR(250),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
