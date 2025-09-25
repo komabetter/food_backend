@@ -3,7 +3,6 @@ package com.example.app.controller;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +50,7 @@ public class OrderController {
                 createdOrder.getPrice(),
                 createdOrder.getCustomerName());
 
-        SuccessResponse<OrderDto> response = new SuccessResponse<>("200", orderDto,"SUCCESS");
+        SuccessResponse<OrderDto> response = new SuccessResponse<>("200", orderDto, "SUCCESS");
         return ResponseEntity.ok(response);
     }
 
@@ -70,7 +69,7 @@ public class OrderController {
                     order.getOrderDetail(),
                     order.getPrice(),
                     order.getCustomerName());
-            SuccessResponse<OrderDto> response = new SuccessResponse<>("200", orderDto,"SUCCESS");
+            SuccessResponse<OrderDto> response = new SuccessResponse<>("200", orderDto, "SUCCESS");
             return ResponseEntity.ok(response);
         }
 
@@ -92,7 +91,7 @@ public class OrderController {
                     orderModel.getOrderDetail(),
                     orderModel.getPrice(),
                     orderModel.getCustomerName());
-            SuccessResponse<OrderDto> response = new SuccessResponse<>("200", orderDto,"SUCCESS");
+            SuccessResponse<OrderDto> response = new SuccessResponse<>("200", orderDto, "SUCCESS");
             return ResponseEntity.ok(response);
         }
 
@@ -115,7 +114,7 @@ public class OrderController {
                         order.getCustomerName()))
                 .toList();
 
-        SuccessResponse<List<OrderDto>> response = new SuccessResponse<>("200", orderDtos,"SUCCESS");
+        SuccessResponse<List<OrderDto>> response = new SuccessResponse<>("200", orderDtos, "SUCCESS");
         return ResponseEntity.ok(response);
     }
 }

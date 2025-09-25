@@ -1,6 +1,6 @@
 # Order Management System
 
-A full-stack application with Spring Boot backend and Angular frontend.
+A backend application with Spring Boot
 
 ## Project Structure
 
@@ -10,9 +10,6 @@ A full-stack application with Spring Boot backend and Angular frontend.
 │   ├── pom.xml
 │   └── Dockerfile
 ├── frontend/         # Angular application
-│   ├── src/
-│   ├── package.json
-│   └── Dockerfile
 └── docker-compose.yaml
 ```
 

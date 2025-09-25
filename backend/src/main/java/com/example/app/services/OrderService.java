@@ -33,16 +33,21 @@ public class OrderService {
         if (existingOrder.isPresent()) {
             OrderModel order = existingOrder.get();
 
+            // Prevent cancellation after completion
             if (statusId == 5 && order.getOrderStatusId() == 4) {
                 return Optional.empty();
             }
 
-            if (order.getOrderStatusId() < statusId) {
+            // Allow only sequential progression (next status) or cancellation (status 5)
+            // Valid transitions: current -> current+1, or any -> 5 (cancel)
+            boolean isSequentialProgression = order.getOrderStatusId() + 1 == statusId;
+            boolean isCancellation = statusId == 5 && order.getOrderStatusId() < 4;
+            
+            if (isSequentialProgression || isCancellation) {
                 order.setOrderStatusId(statusId);
                 order.setOrderStatusName(statusName);
                 return Optional.of(orderRepository.save(order));
             }
-
         }
         return Optional.empty();
     }
