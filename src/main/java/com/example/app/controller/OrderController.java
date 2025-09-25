@@ -11,6 +11,8 @@ import com.example.app.models.OrderModel;
 import com.example.app.repositories.OrderRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api")
@@ -35,16 +37,32 @@ public class OrderController {
                 .toList();
     }
 
-    @PostMapping("/order")
-    public String createOrder(@RequestBody OrderDto orderDto) {
+    @PostMapping("/orders")
+    public OrderDto createOrder(@RequestBody OrderDto orderDto) {
 
-        orderRepository.addOrder(new OrderModel(
+        OrderModel createdOrder = orderRepository.addOrder(new OrderModel(
                 orderDto.getOrderStatusId(),
                 orderDto.getOrderStatusName(),
                 orderDto.getOrderDetail(),
                 orderDto.getPrice(),
                 orderDto.getCustomerName()));
-        return "entity";
+
+        return new OrderDto(
+                createdOrder.getId(),
+                createdOrder.getOrderStatusId(),
+                createdOrder.getOrderStatusName(),
+                createdOrder.getOrderDetail(),
+                createdOrder.getPrice(),
+                createdOrder.getCustomerName());
+    }
+
+    @PutMapping("/order/{id}")
+    public String updateOrder(@PathVariable String id, @RequestBody OrderDto orderDto) {
+        
+        OrderModel updateOrder = new OrderModel(id,orderDto.getOrderStatusId(),orderDto.getOrderStatusName());
+        orderRepository.editOrder(updateOrder);
+
+        return "Update Success";
     }
 
 }

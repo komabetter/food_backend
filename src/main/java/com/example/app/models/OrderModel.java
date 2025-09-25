@@ -9,9 +9,6 @@ public class OrderModel {
     private Float price;
     private String customerName;
 
-
-    
-
     public OrderModel(int orderStatusId, String orderStatusName, String orderDetail, Float price, String customerName) {
         this.id = String.valueOf(System.currentTimeMillis());
         this.orderStatusId = orderStatusId;
@@ -31,6 +28,12 @@ public class OrderModel {
         this.customerName = customerName;
     }
 
+    public OrderModel(String id, int orderStatusId, String orderStatusName) {
+        this.id = id;
+        this.orderStatusId = orderStatusId;
+        this.orderStatusName = orderStatusName;
+    }
+
     public String getId() {
         return id;
     }
@@ -43,7 +46,7 @@ public class OrderModel {
         return orderStatusId;
     }
 
-    public void setOrderStatusId(byte orderStatusId) {
+    public void setOrderStatusId(int orderStatusId) {
         this.orderStatusId = orderStatusId;
     }
 

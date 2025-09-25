@@ -10,8 +10,8 @@ public class OrderRepository {
 
         private List<OrderModel> orders = new ArrayList<>(
                         List.of(
-                                        new OrderModel("UUID2",1, "OrderNow", "Detail", (float) 32.0, "sert"),
-                                        new OrderModel("UUID1",2, "TEST", "Detail", (float) 33.03, "Moku")
+                                        new OrderModel("UUID2", 1, "OrderNow", "Detail", (float) 32.0, "sert"),
+                                        new OrderModel("UUID1", 2, "TEST", "Detail", (float) 33.03, "Moku")
 
                         ));
 
@@ -19,7 +19,20 @@ public class OrderRepository {
                 return orders;
         }
 
-        public void addOrder(OrderModel order){
+        public OrderModel addOrder(OrderModel order) {
                 orders.add(order);
+                return order;
+        }
+
+        public void editOrder(OrderModel order) {
+                for (int i = 0; i < orders.size(); i++) {
+                        if (orders.get(i).getId().equals(order.getId())) {
+                                // orders.set(i, order);
+                                orders.get(i).setOrderStatusId(order.getOrderStatusId());
+                                orders.get(i).setOrderStatusName(order.getOrderStatusName());
+
+                                return;
+                        }
+                }
         }
 }
