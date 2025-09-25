@@ -19,9 +19,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class OrderController {
 
     private final OrderService orderService;
@@ -116,5 +119,19 @@ public class OrderController {
 
         SuccessResponse<List<OrderDto>> response = new SuccessResponse<>("200", orderDtos, "SUCCESS");
         return ResponseEntity.ok(response);
+    }
+
+    // 5. Delete Order
+    @DeleteMapping("/orders/{id}")
+    public ResponseEntity<?> deleteOrder(@PathVariable String id) {
+        boolean deleted = orderService.deleteOrder(id);
+        
+        if (deleted) {
+            SuccessResponse<String> response = new SuccessResponse<>("200", "Order deleted successfully", "SUCCESS");
+            return ResponseEntity.ok(response);
+        }
+        
+        ErrorResponse errorResponse = new ErrorResponse("400", "Order not found or could not be deleted");
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 }

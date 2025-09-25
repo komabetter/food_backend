@@ -11,6 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/order-statuses")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class MsOrderStatusController {
 
     private MsOrderStatusService msOrderStatusService;
