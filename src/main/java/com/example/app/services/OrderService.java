@@ -11,9 +11,11 @@ import com.example.app.repositories.OrderRepository;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final RedisService redisService;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository, RedisService redisService) {
         this.orderRepository = orderRepository;
+        this.redisService = redisService;
     }
 
     public List<OrderModel> getAllOrders() {
@@ -21,6 +23,10 @@ public class OrderService {
     }
 
     public Optional<OrderModel> getOrderById(String id) {
+
+        if( redisService.hasOrderCache(id)){
+            return Optional.ofNullable(redisService.getOrder(id));
+        }
         return orderRepository.findById(id);
     }
 
