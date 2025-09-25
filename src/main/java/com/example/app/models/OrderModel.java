@@ -9,8 +9,21 @@ public class OrderModel {
     private Float price;
     private String customerName;
 
-    public OrderModel(int orderStatusId, String orderStatusName, String orderDetail, Float price,
+
+    
+
+    public OrderModel(int orderStatusId, String orderStatusName, String orderDetail, Float price, String customerName) {
+        this.id = String.valueOf(System.currentTimeMillis());
+        this.orderStatusId = orderStatusId;
+        this.orderStatusName = orderStatusName;
+        this.orderDetail = orderDetail;
+        this.price = price;
+        this.customerName = customerName;
+    }
+
+    public OrderModel(String id, int orderStatusId, String orderStatusName, String orderDetail, Float price,
             String customerName) {
+        this.id = id;
         this.orderStatusId = orderStatusId;
         this.orderStatusName = orderStatusName;
         this.orderDetail = orderDetail;

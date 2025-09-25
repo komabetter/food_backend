@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.app.dtos.OrderDto;
+import com.example.app.models.OrderModel;
 import com.example.app.repositories.OrderRepository;
-
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -16,16 +16,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api")
 public class OrderController {
 
-    @PostMapping("order")
-    public String postMethodName(@RequestBody String entity) {
+    private OrderRepository orderRepository;
 
-        return entity;
+    public OrderController(OrderRepository orderRepository) {
+        this.orderRepository = orderRepository;
     }
 
     @GetMapping("/orders")
-    public List<OrderDto> home() {
-        OrderRepository orderRepo = new OrderRepository();
-        return orderRepo.getOrders().stream()
+    public List<OrderDto> getOrders() {
+        return orderRepository.getOrders().stream()
                 .map(order -> new OrderDto(
                         order.getId(),
                         order.getOrderStatusId(),
@@ -35,4 +34,17 @@ public class OrderController {
                         order.getCustomerName()))
                 .toList();
     }
+
+    @PostMapping("/order")
+    public String createOrder(@RequestBody OrderDto orderDto) {
+
+        orderRepository.addOrder(new OrderModel(
+                orderDto.getOrderStatusId(),
+                orderDto.getOrderStatusName(),
+                orderDto.getOrderDetail(),
+                orderDto.getPrice(),
+                orderDto.getCustomerName()));
+        return "entity";
+    }
+
 }

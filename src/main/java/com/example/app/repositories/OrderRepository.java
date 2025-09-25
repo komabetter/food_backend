@@ -2,19 +2,24 @@ package com.example.app.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import org.springframework.stereotype.Repository;
 import com.example.app.models.OrderModel;
 
+@Repository
 public class OrderRepository {
 
         private List<OrderModel> orders = new ArrayList<>(
                         List.of(
-                                        new OrderModel(1, "OrderNow", "Detail", (float) 32.0, "sert"),
-                                        new OrderModel(2, "TEST", "Detail", (float) 33.03, "Moku")
+                                        new OrderModel("UUID2",1, "OrderNow", "Detail", (float) 32.0, "sert"),
+                                        new OrderModel("UUID1",2, "TEST", "Detail", (float) 33.03, "Moku")
 
                         ));
 
         public List<OrderModel> getOrders() {
                 return orders;
+        }
+
+        public void addOrder(OrderModel order){
+                orders.add(order);
         }
 }
