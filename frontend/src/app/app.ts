@@ -3,6 +3,7 @@ import { Component, signal, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor, NgClass } from '@angular/common';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 interface Order {
   id: string;
@@ -14,7 +15,15 @@ interface Order {
   updatedAt: string;
 }
 
+interface Food {
+  name: string;
+  price: number;
+}
 
+interface OrderStatus {
+  id: number,
+  statusName: string;
+}
 
 @Component({
   selector: 'app-root',
@@ -24,9 +33,10 @@ interface Order {
 })
 export class App implements OnInit {
   protected readonly title = signal('frontend');
+  private endpoint: string = `http://localhost:8080/api`;
   orders: Order[] = [];
 
-  private mockFoods = [
+  mockFoods: Food[] = [
     { name: 'Tom Yum Goong', price: 12.99 },
     { name: 'Pad Thai', price: 10.50 },
     { name: 'Green Curry', price: 13.75 },
@@ -39,8 +49,17 @@ export class App implements OnInit {
     { name: 'Chicken Satay', price: 12.25 }
   ];
 
-  name = 'frontend';
-  surname = 'NG';
+  orderStatus: OrderStatus[] = [
+    { id: 1, statusName: 'PENDING' },
+    { id: 2, statusName: 'CONFIRMED' },
+    { id: 3, statusName: 'COOKING' },
+    { id: 4, statusName: 'DELIVERING' },
+    { id: 5, statusName: 'COMPLETED' },
+    { id: 6, statusName: 'CANCELLED' },
+  ];
+
+  name = 'Prasert';
+  surname = 'Kulborekupt';
 
   ngOnInit() {
     this.fetchOrders();
@@ -48,7 +67,7 @@ export class App implements OnInit {
 
   async fetchOrders() {
     try {
-      const response = await axios.get('http://localhost:8080/api/orders');
+      const response = await axios.get(`${this.endpoint}/orders`);
       // The API returns data in a nested structure
       this.orders = response.data.data.content;
     } catch (error) {
@@ -73,5 +92,61 @@ export class App implements OnInit {
 
   showName() {
     return this.name + ' ' + this.surname;
+  }
+
+  openCreateOrderModal() {
+    const modalElement = document.getElementById('createOrderModal');
+    if (modalElement) {
+      const modal = new (window as any).bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  async createOrder(index: number) {
+    const selectedFood = this.mockFoods[index];
+    const body = {
+      orderStatusId: this.orderStatus[0].id,
+      orderStatusName: this.orderStatus[0].statusName,
+      orderDetail: selectedFood.name,
+      price: selectedFood.price,
+      customerName: this.showName()
+    };
+
+
+    const result = await Swal.fire({
+      title: 'Confirm Order',
+      text: `Are you sure you want to order ${selectedFood.name} for $${selectedFood.price}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, create order',
+      cancelButtonText: 'Cancel'
+    });
+
+    if (result.isConfirmed) {
+
+      const { data } = await axios.post(`${this.endpoint}/orders`, body, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      console.log(data)
+
+      if (data.status_code == 200) {
+        Swal.fire({
+          title: 'Order Created!',
+          text: `Your order for ${selectedFood.name} has been created successfully.`,
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+
+        this.orders.push(data.data)
+
+      }
+
+    }
+
+
+
   }
 }

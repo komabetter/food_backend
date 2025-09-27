@@ -42,7 +42,7 @@
                     <td>${{ food.price }}</td>
                     <td>
                       <button class="btn btn-primary btn-sm" (click)="createOrder(i)">
-                        Order Now
+                        Create Order
                       </button>
                     </td>
                   </tr>
@@ -71,7 +71,6 @@
             <table class="table table-hover">
               <thead class="table-light">
                 <tr>
-                  <th>Order ID</th>
                   <th>Order Name</th>
                   <th>Price</th>
                   <th>Order Status</th>
@@ -82,7 +81,6 @@
               </thead>
               <tbody>
                 <tr *ngFor="let order of orders">
-                  <td>{{ order.id }}</td>
                   <td>{{ order.orderDetail }}</td>
                   <td>${{ order.price }}</td>
                   <td><span class="badge" [ngClass]="getStatusClass(order.orderStatusName)">{{ order.orderStatusName }}</span></td>
