@@ -147,14 +147,15 @@ export class App implements OnInit {
       customerName: this.showName()
     };
 
-    const result = await Swal.fire({
-      title: 'Confirm Order',
-      text: `Are you sure you want to order ${selectedFood.name} for $${selectedFood.price}?`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, create order',
-      cancelButtonText: 'Cancel'
-    });
+   const result = await Swal.fire({
+  title: 'Confirm Order',
+  html: `Are you sure you want to order <br> [${selectedFood.name}]
+         for [${selectedFood.price}] ?`,
+  icon: 'question',
+  showCancelButton: true,
+  confirmButtonText: 'Yes, create order',
+  cancelButtonText: 'Cancel'
+});
 
     if (result.isConfirmed) {
       const { data } = await axios.post(`${this.endpoint}/orders`, body, {
@@ -168,7 +169,7 @@ export class App implements OnInit {
       if (data.status_code == 200) {
         Swal.fire({
           title: 'Order Created!',
-          text: `Your order for ${selectedFood.name} has been created successfully.`,
+          html: `Your order for [${selectedFood.name}] <br> has been created successfully.`,
           icon: 'success',
           confirmButtonText: 'OK'
         });
@@ -246,11 +247,11 @@ export class App implements OnInit {
         // Show confirmation
         await Swal.fire({
           title: 'Status Updated!',
-          text: `Order status has been updated to ${newStatus.statusName}.`,
+          html: `Order status has been updated to [${newStatus.statusName}].`,
           icon: 'success',
           confirmButtonText: 'OK'
         });
-        console.log(`Updating order ${this.selectedOrder.id} to status ${newStatus.statusName}`);
+        console.log(`Updating order [${this.selectedOrder.id}] to status [${newStatus.statusName}]`);
 
         //Update UI
         this.selectedOrder.orderStatusId = newStatus.id;
@@ -261,7 +262,7 @@ export class App implements OnInit {
         // Show confirmation
         Swal.fire({
           title: 'Status Updated!',
-          text: `Fail updated to ${newStatus.statusName}.`,
+          text: `Fail updated to [${newStatus.statusName}].`,
           icon: 'warning',
           confirmButtonText: 'Something went wrong.'
         });

@@ -17,15 +17,15 @@ services:
     networks:
       - app-network
 
-  # frontend:
-  #   build: ./frontend
-  #   container_name: angular-frontend
-  #   ports:
-  #     - "4200:4200"
-  #   depends_on:
-  #     - backend
-  #   networks:
-  #     - app-network
+  frontend:
+    build: ./frontend
+    container_name: angular-frontend
+    ports:
+      - "4200:4200"
+    depends_on:
+      - backend
+    networks:
+      - app-network
 
   mindebase_redis:
     image: redis:7-alpine

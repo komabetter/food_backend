@@ -1,16 +1,20 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">{{ title() }}</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
           <a class="nav-link active" href="#" (click)="openCreateOrderModal()">
-            <i class="bi bi-plus-circle me-1"></i>Create Order | 
-            <i class="bi bi-plus-circle me-1"></i>Total Price : {{ getTotalPrice() }}
+            <i class="bi bi-plus-circle me-1"></i>Create Order |
+
           </a>
+        </li>
+        <li class="nav-link  nav-item">
+          Total Price : {{ getTotalPrice() }}
         </li>
       </ul>
     </div>
@@ -87,16 +91,17 @@
                   <td>{{ order.orderDetail }}</td>
                   <td>{{ order.customerName }}</td>
                   <td class="text-end">{{ order.price }}</td>
-                  <td><span class="badge d-block w-100" [ngClass]="getStatusClass(order.orderStatusId)">{{ order.orderStatusName }}</span></td>
+                  <td><span class="badge d-block w-100" [ngClass]="getStatusClass(order.orderStatusId)">{{
+                      order.orderStatusName }}</span></td>
                   <td>{{ formatDateTime(order.updatedAt) }}</td>
-                  <td><button class="btn" (click)="openStatusPopup(order)">Click</button></td>
+                  <td><button class="btn" (click)="openStatusPopup(order)"><i class="bi bi-list"></i></button></td>
 
                 </tr>
               </tbody>
             </table>
           </div>
-          
-       
+
+
         </div>
       </div>
     </div>
@@ -114,14 +119,11 @@
       <div class="modal-body">
         <p *ngIf="selectedOrder">Current status: {{ selectedOrder.orderStatusName }}</p>
         <div class="d-grid gap-2">
-          <button 
-            *ngFor="let status of availableStatuses" 
-            class="btn btn-primary" 
-            [ngClass]="getStatusClass(status.id)"
+          <button *ngFor="let status of availableStatuses" class="btn btn-primary" [ngClass]="getStatusClass(status.id)"
             (click)="updateOrderStatus(status)">
             {{ status.statusName }}
           </button>
-          
+
         </div>
       </div>
       <div class="modal-footer">

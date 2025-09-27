@@ -42,12 +42,16 @@ public class OrderService {
         if (existingOrder.isPresent()) {
             OrderModel order = existingOrder.get();
 
-            if (statusId != order.getOrderStatusId() + 1) {
-                return Optional.empty();
-            }
 
-            if (order.getOrderStatusId() == 5 && statusId == 6) {
-                return Optional.empty();
+            if (statusId == 6) {
+                if (order.getOrderStatusId() >= 1 && order.getOrderStatusId() <= 4) {
+                } else {
+                    return Optional.empty(); 
+                }
+            } else {
+                if (statusId != order.getOrderStatusId() + 1) {
+                    return Optional.empty();
+                }
             }
 
             order.setOrderStatusId(statusId);
