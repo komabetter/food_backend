@@ -120,9 +120,7 @@
             (click)="updateOrderStatus(status)">
             {{ status.statusName }}
           </button>
-          <button *ngIf="availableStatuses.length === 0" class="btn btn-secondary" disabled>
-            No available statuses
-          </button>
+          
         </div>
       </div>
       <div class="modal-footer">

@@ -181,19 +181,19 @@ export class App implements OnInit {
 
   // Method to update order status
   async updateOrderStatus(newStatus: OrderStatus) {
-    if (this.selectedOrder) {
-      // Update the order status in the UI
-      this.selectedOrder.orderStatusId = newStatus.id;
-      this.selectedOrder.orderStatusName = newStatus.statusName;
 
-      console.log(`Updating order ${this.selectedOrder.id} to status ${newStatus.statusName}`);
+    if (this.selectedOrder) {
 
       const body = {
-        "statusId": this.selectedOrder.orderStatusId,
-        "statusName": this.selectedOrder.orderStatusName
+        "statusId": newStatus.id,
+        "statusName": newStatus.statusName
       }
 
-      console.log(body,this.selectedOrder.id)
+      console.log(body)
+      console.log(newStatus.id)
+      
+
+      console.log(body, this.selectedOrder.id)
       const { data } = await axios.put(`${this.endpoint}/orders/${this.selectedOrder.id}`, body, {
         headers: {
           'Content-Type': 'application/json'
@@ -201,13 +201,20 @@ export class App implements OnInit {
       });
 
       if (data.status_code == 200) {
+
         // Show confirmation
-        Swal.fire({
+        await Swal.fire({
           title: 'Status Updated!',
           text: `Order status has been updated to ${newStatus.statusName}.`,
           icon: 'success',
           confirmButtonText: 'OK'
         });
+        console.log(`Updating order ${this.selectedOrder.id} to status ${newStatus.statusName}`);
+
+        //Update UI
+        this.selectedOrder.orderStatusId = newStatus.id;
+        this.selectedOrder.orderStatusName = newStatus.statusName;
+
       } else {
         // Show confirmation
         Swal.fire({
