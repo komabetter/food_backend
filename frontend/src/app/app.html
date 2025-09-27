@@ -88,7 +88,8 @@
                   <td class="text-end">{{ order.price }}</td>
                   <td><span class="badge d-block w-100" [ngClass]="getStatusClass(order.orderStatusId)">{{ order.orderStatusName }}</span></td>
                   <td>{{ order.updatedAt || 'N/A' }}</td>
-                  <td>...</td>
+                  <td><button (click)="openStatusPopup(order)">Click</button></td>
+
                 </tr>
               </tbody>
             </table>
@@ -96,6 +97,36 @@
           
        
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Status Popup -->
+<div class="modal fade" id="statusPopup" tabindex="-1" aria-labelledby="statusPopupLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statusPopupLabel">Update Order Status</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p *ngIf="selectedOrder">Current status: {{ selectedOrder.orderStatusName }}</p>
+        <div class="d-grid gap-2">
+          <button 
+            *ngFor="let status of availableStatuses" 
+            class="btn btn-primary" 
+            [ngClass]="getStatusClass(status.id)"
+            (click)="updateOrderStatus(status)">
+            {{ status.statusName }}
+          </button>
+          <button *ngIf="availableStatuses.length === 0" class="btn btn-secondary" disabled>
+            No available statuses
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

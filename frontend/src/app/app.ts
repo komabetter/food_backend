@@ -1,7 +1,7 @@
 import { Component, signal, OnInit } from '@angular/core';
 // import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgClass } from '@angular/common';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -27,7 +27,7 @@ interface OrderStatus {
 
 @Component({
   selector: 'app-root',
-  imports: [FormsModule, NgFor, NgClass],
+  imports: [FormsModule, NgFor, NgClass, NgIf],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -35,6 +35,8 @@ export class App implements OnInit {
   protected readonly title = signal('frontend');
   private endpoint: string = `http://localhost:8080/api`;
   orders: Order[] = [];
+  selectedOrder: Order | null = null;
+  availableStatuses: OrderStatus[] = [];
 
   mockFoods: Food[] = [
     { name: 'Tom Yum Goong', price: 12.99 },
@@ -76,7 +78,6 @@ export class App implements OnInit {
   }
 
   getStatusClass(id: number): string {
-
     switch (id) {
       case 1: return 'bg-secondary';
       case 2: return 'bg-primary';
@@ -110,7 +111,6 @@ export class App implements OnInit {
       customerName: this.showName()
     };
 
-
     const result = await Swal.fire({
       title: 'Confirm Order',
       text: `Are you sure you want to order ${selectedFood.name} for $${selectedFood.price}?`,
@@ -121,7 +121,6 @@ export class App implements OnInit {
     });
 
     if (result.isConfirmed) {
-
       const { data } = await axios.post(`${this.endpoint}/orders`, body, {
         headers: {
           'Content-Type': 'application/json'
@@ -139,12 +138,89 @@ export class App implements OnInit {
         });
 
         this.orders.push(data.data)
+      }
+    }
+  }
 
+  getAvailableStatuses(currentStatusId: number): OrderStatus[] {
+    if (currentStatusId === 6 || currentStatusId === 5) {
+      return [];
+    }
+
+    const available: OrderStatus[] = [];
+
+    // Add next status (current + 1)
+    const nextStatus = this.orderStatus.find(status => status.id === currentStatusId + 1);
+    if (nextStatus) {
+      available.push(nextStatus);
+    }
+
+    // Special case for status 1: also show status 6 (CANCELLED)
+    if (currentStatusId != 5) {
+      const cancelStatus = this.orderStatus.find(status => status.id === 6);
+      if (cancelStatus) {
+        available.push(cancelStatus);
+      }
+    }
+
+    return available;
+  }
+
+  // Method to open the status popup
+  openStatusPopup(order: Order) {
+    this.selectedOrder = order;
+    this.availableStatuses = this.getAvailableStatuses(order.orderStatusId);
+
+    // Show the Bootstrap modal
+    const modalElement = document.getElementById('statusPopup');
+    if (modalElement) {
+      const modal = new (window as any).bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+  // Method to update order status
+  async updateOrderStatus(newStatus: OrderStatus) {
+    if (this.selectedOrder) {
+      // Update the order status in the UI
+      this.selectedOrder.orderStatusId = newStatus.id;
+      this.selectedOrder.orderStatusName = newStatus.statusName;
+
+      console.log(`Updating order ${this.selectedOrder.id} to status ${newStatus.statusName}`);
+
+      const body = {
+        "statusId": this.selectedOrder.orderStatusId,
+        "statusName": this.selectedOrder.orderStatusName
+      }
+
+      console.log(body,this.selectedOrder.id)
+      const { data } = await axios.put(`${this.endpoint}/orders/${this.selectedOrder.id}`, body, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (data.status_code == 200) {
+        // Show confirmation
+        Swal.fire({
+          title: 'Status Updated!',
+          text: `Order status has been updated to ${newStatus.statusName}.`,
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+      } else {
+        // Show confirmation
+        Swal.fire({
+          title: 'Status Updated!',
+          text: `Fail updated to ${newStatus.statusName}.`,
+          icon: 'warning',
+          confirmButtonText: 'Something went wrong.'
+        });
       }
 
     }
 
 
-
   }
+
 }
