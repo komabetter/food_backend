@@ -32,11 +32,13 @@ interface OrderStatus {
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  protected readonly title = signal('frontend');
+  protected readonly title = signal('Frontend');
   private endpoint: string = `http://localhost:8080/api`;
   orders: Order[] = [];
   selectedOrder: Order | null = null;
   availableStatuses: OrderStatus[] = [];
+
+  totalPrice = 0;
 
   mockFoods: Food[] = [
     { name: 'Tom Yum Goong', price: 12.99 },
@@ -72,6 +74,12 @@ export class App implements OnInit {
       const response = await axios.get(`${this.endpoint}/orders`);
       // The API returns data in a nested structure
       this.orders = response.data.data.content;
+
+      for (let i = 0; i < this.orders.length; i++) {
+        if (this.orders[i].orderStatusId != 6) {
+          this.totalPrice += this.orders[i].price;
+        }
+      }
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
@@ -91,6 +99,34 @@ export class App implements OnInit {
 
   showName() {
     return this.name + ' ' + this.surname;
+  }
+
+  formatDateTime(dateString: string): string {
+    if (!dateString) return 'N/A';
+
+    const date = new Date(dateString);
+
+    // 1. Check if the date object is valid after parsing
+    if (isNaN(date.getTime())) {
+      // Handle invalid date strings (e.g., "invalid date", "abc")
+      return 'Invalid Date';
+    }
+
+    // 2. Use 'en-GB' locale but specify 'timeZone' as 'UTC' 
+    // to ensure consistent output, otherwise the output will vary based on the user's timezone.
+    // We remove the .replace(',', '') because the 'en-GB' format with both date and time 
+    // components typically includes a comma between them, which is correct formatting.
+    // The original code was removing a valid separator.
+    return new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: 'UTC', // Ensures the date and time are displayed in UTC, not local time
+    }).format(date);
   }
 
   openCreateOrderModal() {
@@ -127,7 +163,7 @@ export class App implements OnInit {
         }
       })
 
-      console.log(data)
+
 
       if (data.status_code == 200) {
         Swal.fire({
@@ -138,8 +174,13 @@ export class App implements OnInit {
         });
 
         this.orders.push(data.data)
+        this.totalPrice += selectedFood.price
       }
     }
+  }
+
+  getTotalPrice(): number {
+    return Number(this.totalPrice.toFixed(2));
   }
 
   getAvailableStatuses(currentStatusId: number): OrderStatus[] {
@@ -191,7 +232,7 @@ export class App implements OnInit {
 
       console.log(body)
       console.log(newStatus.id)
-      
+
 
       console.log(body, this.selectedOrder.id)
       const { data } = await axios.put(`${this.endpoint}/orders/${this.selectedOrder.id}`, body, {
@@ -214,6 +255,7 @@ export class App implements OnInit {
         //Update UI
         this.selectedOrder.orderStatusId = newStatus.id;
         this.selectedOrder.orderStatusName = newStatus.statusName;
+        this.selectedOrder.updatedAt = data.data.updatedAt;
 
       } else {
         // Show confirmation

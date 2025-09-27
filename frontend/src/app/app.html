@@ -8,7 +8,8 @@
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
           <a class="nav-link active" href="#" (click)="openCreateOrderModal()">
-            <i class="bi bi-plus-circle me-1"></i>Create Order
+            <i class="bi bi-plus-circle me-1"></i>Create Order | 
+            <i class="bi bi-plus-circle me-1"></i>Total Price : {{ getTotalPrice() }}
           </a>
         </li>
       </ul>
@@ -31,16 +32,16 @@
               <table class="table table-hover">
                 <thead class="table-light">
                   <tr>
-                    <th>Food Item</th>
-                    <th>Price</th>
-                    <th>Action</th>
+                    <th>Name</th>
+                    <th class="text-end">Price</th>
+                    <th class="text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr *ngFor="let food of mockFoods; let i = index">
                     <td>{{ food.name }}</td>
-                    <td>${{ food.price }}</td>
-                    <td>
+                    <td class="text-end">{{ food.price }}</td>
+                    <td class="text-center">
                       <button class="btn btn-primary btn-sm" (click)="createOrder(i)">
                         Order Now
                       </button>
@@ -87,8 +88,8 @@
                   <td>{{ order.customerName }}</td>
                   <td class="text-end">{{ order.price }}</td>
                   <td><span class="badge d-block w-100" [ngClass]="getStatusClass(order.orderStatusId)">{{ order.orderStatusName }}</span></td>
-                  <td>{{ order.updatedAt || 'N/A' }}</td>
-                  <td><button (click)="openStatusPopup(order)">Click</button></td>
+                  <td>{{ formatDateTime(order.updatedAt) }}</td>
+                  <td><button class="btn" (click)="openStatusPopup(order)">Click</button></td>
 
                 </tr>
               </tbody>

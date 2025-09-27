@@ -1,5 +1,7 @@
 package com.example.app.dtos;
 
+import java.time.LocalDateTime;
+
 public class OrderDto {
     private String id;
     private int orderStatusId;
@@ -7,17 +9,20 @@ public class OrderDto {
     private String orderDetail;
     private Float price;
     private String customerName;
+    private LocalDateTime updatedAt;
 
-    public OrderDto() {}
+    public OrderDto() {
+    }
 
     public OrderDto(String id, int orderStatusId, String orderStatusName, String orderDetail, Float price,
-            String customerName) {
+            String customerName, LocalDateTime updatedAt) {
         this.id = id;
         this.orderStatusId = orderStatusId;
         this.orderStatusName = orderStatusName;
         this.orderDetail = orderDetail;
         this.price = price;
         this.customerName = customerName;
+        this.updatedAt = updatedAt;
     }
 
     public String getId() {
@@ -66,6 +71,14 @@ public class OrderDto {
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
 }

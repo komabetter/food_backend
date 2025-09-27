@@ -57,7 +57,8 @@ public class OrderController {
                 createdOrder.getOrderStatusName(),
                 createdOrder.getOrderDetail(),
                 createdOrder.getPrice(),
-                createdOrder.getCustomerName());
+                createdOrder.getCustomerName(),
+                createdOrder.getUpdatedAt());
 
         SuccessResponse<OrderDto> response = new SuccessResponse<>("200", orderDto, "SUCCESS");
         return ResponseEntity.ok(response);
@@ -77,7 +78,8 @@ public class OrderController {
                     order.getOrderStatusName(),
                     order.getOrderDetail(),
                     order.getPrice(),
-                    order.getCustomerName());
+                    order.getCustomerName(),
+                    order.getUpdatedAt());
             SuccessResponse<OrderDto> response = new SuccessResponse<>("200", orderDto, "SUCCESS");
             return ResponseEntity.ok(response);
         }
@@ -99,7 +101,8 @@ public class OrderController {
                     orderModel.getOrderStatusName(),
                     orderModel.getOrderDetail(),
                     orderModel.getPrice(),
-                    orderModel.getCustomerName());
+                    orderModel.getCustomerName(),
+                    orderModel.getUpdatedAt());
             SuccessResponse<OrderDto> response = new SuccessResponse<>("200", orderDto, "SUCCESS");
             return ResponseEntity.ok(response);
         }
@@ -111,9 +114,9 @@ public class OrderController {
     // 4. Get Orders (List with Pagination)
     @GetMapping("/orders")
     public ResponseEntity<SuccessResponse<PagedOrderResponse>> getAllOrdersPaginated(
-            @PageableDefault(size = 10, sort = {"id"}, direction = Sort.Direction.ASC) Pageable pageable,
+            @PageableDefault(size = 10, sort = { "id" }, direction = Sort.Direction.ASC) Pageable pageable,
             @RequestParam(required = false) String status) {
-        
+
         Page<OrderModel> ordersPage = orderService.getAllOrders(pageable, status);
 
         List<OrderDto> orderDtos = ordersPage.getContent().stream()
@@ -123,7 +126,8 @@ public class OrderController {
                         order.getOrderStatusName(),
                         order.getOrderDetail(),
                         order.getPrice(),
-                        order.getCustomerName()))
+                        order.getCustomerName(),
+                        order.getUpdatedAt()))
                 .toList();
 
         PagedOrderResponse pagedResponse = new PagedOrderResponse(
@@ -135,8 +139,7 @@ public class OrderController {
                 ordersPage.isFirst(),
                 ordersPage.isLast(),
                 ordersPage.hasNext(),
-                ordersPage.hasPrevious()
-        );
+                ordersPage.hasPrevious());
 
         SuccessResponse<PagedOrderResponse> response = new SuccessResponse<>("200", pagedResponse, "SUCCESS");
         return ResponseEntity.ok(response);
@@ -146,12 +149,12 @@ public class OrderController {
     @DeleteMapping("/orders/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable String id) {
         boolean deleted = orderService.deleteOrder(id);
-        
+
         if (deleted) {
             SuccessResponse<String> response = new SuccessResponse<>("200", "Order deleted successfully", "SUCCESS");
             return ResponseEntity.ok(response);
         }
-        
+
         ErrorResponse errorResponse = new ErrorResponse("400", "Order not found or could not be deleted");
         return ResponseEntity.badRequest().body(errorResponse);
     }
