@@ -75,18 +75,16 @@ export class App implements OnInit {
     }
   }
 
-  getStatusClass(status: string): string {
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return 'bg-success';
-      case 'pending':
-        return 'bg-warning';
-      case 'processing':
-        return 'bg-info';
-      case 'cancelled':
-        return 'bg-danger';
-      default:
-        return 'bg-secondary';
+  getStatusClass(id: number): string {
+
+    switch (id) {
+      case 1: return 'bg-secondary';
+      case 2: return 'bg-primary';
+      case 3: return 'bg-warning';
+      case 4: return 'bg-info';
+      case 5: return 'bg-success';
+      case 6: return 'bg-danger';
+      default: return 'bg-secondary';
     }
   }
 
