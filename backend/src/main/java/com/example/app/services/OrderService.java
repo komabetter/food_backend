@@ -42,13 +42,19 @@ public class OrderService {
         if (existingOrder.isPresent()) {
             OrderModel order = existingOrder.get();
 
-
-            if (statusId == 6) {
+            // Handle special cases for cancellation (status 5)
+            if (statusId == 5) {
+                // Allow cancellation only before completion (before status 4)
+                if (order.getOrderStatusId() >= 4) {
+                    return Optional.empty(); // Cannot cancel after completion
+                }
+            } else if (statusId == 6) {
                 if (order.getOrderStatusId() >= 1 && order.getOrderStatusId() <= 4) {
                 } else {
                     return Optional.empty(); 
                 }
             } else {
+                // Regular sequential progression
                 if (statusId != order.getOrderStatusId() + 1) {
                     return Optional.empty();
                 }

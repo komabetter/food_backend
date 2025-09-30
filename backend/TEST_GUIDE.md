@@ -29,14 +29,14 @@ The service now properly enforces:
 - 3 → 4 (In Progress → Completed)
 
 ✅ **Cancellation Rules**:
-- Any status → 5 (Cancelled) **BEFORE** completion
-- Status 4 → 5 is **BLOCKED** (cannot cancel after completion)
+- Any status (1-3) → 5 (Cancelled) **BEFORE** completion
+- Status 4+ → 5 is **BLOCKED** (cannot cancel after completion)
 
 ❌ **Prevented Actions**:
 - Backward progression (3→1, 4→2)
 - Status skipping (1→3, 2→4)
 - Same status updates (2→2, 3→3)
-- Cancellation after completion (4→5)
+- Cancellation after completion (4→5, 5→5)
 
 ## Test Results
 
